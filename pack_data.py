@@ -1,10 +1,12 @@
 # Repacks DATA0/1.bin without compression (for now)
 # Usage: packDATA.py [DATA0 (or idx file) path] [dir containing data] [dir for output]
-# data dir content naming is [index].[extension] (extension I used is just `.idxout` from Steven's tool)
+# data dir content naming is [index].bin (you can change it to `.idxout` for Steven's tool if you want)
 
-import os, sys, struct
+import os
+import struct
+import sys
 
-DATA_EXTENSION = ".idxout"
+DATA_EXTENSION = ".bin"
 INDEX_BLOCK_SIZE = 0x20
 
 indexFilePath = sys.argv[1]
@@ -18,7 +20,7 @@ outDATAFile = open(os.path.join(outDir, "DATA1.bin"), 'wb')
 
 curIdx = 0
 curOutOffset = 0
-while (True):
+while True:
 	curIdxBlock = indexFile.read(INDEX_BLOCK_SIZE)
 	if len(curIdxBlock) == 0:
 		break

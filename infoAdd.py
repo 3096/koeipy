@@ -1,3 +1,5 @@
+# This script is deprecated. use pack_info instead
+#
 # Usage: infoAdd.py [info0 file to add to] [file to add] [out dir]
 # the script looks for index from the filename of "file to add"
 
