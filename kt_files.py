@@ -85,4 +85,4 @@ def pack_kt_arc_bin(in_dir, out_file_path, compress_lvl=0):
 
 
 # test
-pack_kt_arc_bin(sys.argv[1], sys.argv[2], compress_lvl=sys.argv[3])
+# pack_kt_arc_bin(sys.argv[1], sys.argv[2], compress_lvl=int(sys.argv[3]))
