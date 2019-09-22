@@ -74,6 +74,8 @@ for cur_path in mod_dir_path.glob("**/*"):
         if cur_path in path_index_map:
             cur_index = path_index_map[cur_path]
             print(f"Replace: {cur_index} - {cur_path}")
+            if not index_entry_map[cur_index].entry_data:  # entry_data not populated means it's already mods entry
+                print(f"WARNING: conflict in {MOD_DIR} - {cur_index} appeared more than once")
             index_entry_map[cur_index] = InfoEntry(index=cur_index, path=cur_path)
         else:
             file_index_match = re.match(r'(\d+)', cur_path.name)
@@ -81,6 +83,8 @@ for cur_path in mod_dir_path.glob("**/*"):
                 cur_file_index = int(file_index_match.group(1))
                 if cur_file_index in index_entry_map:
                     print(f"Replace: {cur_file_index} - {cur_path}")
+                    if not index_entry_map[cur_file_index].entry_data:
+                        print(f"WARNING: conflict in {MOD_DIR} - {cur_file_index} appeared more than once")
                 else:
                     print(f"Add: {cur_file_index} - {cur_path}")
                 index_entry_map[cur_file_index] = InfoEntry(index=cur_file_index, path=cur_path)
