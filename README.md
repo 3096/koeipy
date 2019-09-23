@@ -1,2 +1,2 @@
-# three-houses-scripts
-random Three Houses script I used when modding the game.
+# koeipy
+Koei Tecmo Engine file utils, tested on Fire Emblem: Three Houses
