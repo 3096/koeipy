@@ -7,10 +7,14 @@ KT_ARC_ENTRY_STRUCT = struct.Struct("<II")
 
 
 def pack_kt_arc_bin(in_dir, out_file_path, compress_lvl=0):
-    file_path_list = [os.path.join(in_dir, path) for path in os.listdir(in_dir) if not os.path.isfile(path)]
+    file_path_list = []
+    for path in os.listdir(in_dir):
+        file_path = os.path.join(in_dir, path)
+        if os.path.isfile(file_path):
+            file_path_list.append(file_path)
     entry_count = len(file_path_list)
 
-    # sort by file name number, ensure order
+    # rearrange by file index to ensure order
     sorted_file_path_list = [''] * entry_count
     for file_path in file_path_list:
         file_idx = int(os.path.basename(file_path).split('.')[0])
