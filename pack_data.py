@@ -6,42 +6,45 @@ import os
 import struct
 import sys
 
+INDEX_FILE_NAME = "DATA0.bin"
+DATA_FILE_NAME = "DATA1.bin"
 DATA_EXTENSION = ".bin"
-INDEX_BLOCK_SIZE = 0x20
 
-indexFilePath = sys.argv[1]
-dataDir = sys.argv[2]
-outDir = sys.argv[3]
+INDEX_BLOCK_STRUCT = struct.Struct('<QQQQ')
 
-indexFile = open(indexFilePath, 'rb')
+if __name__ == "__main__":
+    index_file_path = sys.argv[1]
+    data_dir = sys.argv[2]
+    out_dir = sys.argv[3]
 
-outIndexFile = open(os.path.join(outDir, "DATA0.bin"), 'wb')
-outDATAFile = open(os.path.join(outDir, "DATA1.bin"), 'wb')
+    source_index_file = open(index_file_path, 'rb')
 
-curIdx = 0
-curOutOffset = 0
-while True:
-	curIdxBlock = indexFile.read(INDEX_BLOCK_SIZE)
-	if len(curIdxBlock) == 0:
-		break
+    out_index_file = open(os.path.join(out_dir, INDEX_FILE_NAME), 'wb')
+    out_data_file = open(os.path.join(out_dir, DATA_FILE_NAME), 'wb')
 
-	curOffset, curSize, curSizeCompressed, curFileType = struct.unpack('<QQQQ', curIdxBlock)
+    cur_idx = 0
+    cur_out_offset = 0
+    while True:
+        cur_idx_block = source_index_file.read(INDEX_BLOCK_STRUCT.size)
+        if len(cur_idx_block) == 0:
+            break
 
-	if curSize != 0:
-		curDataPath = os.path.join(dataDir, str(curIdx) + DATA_EXTENSION)
-		newSize = os.path.getsize(curDataPath)
-		if curSize != newSize:
-			print(f"index {curIdx} new size: {hex(newSize)}")
-			curSize = newSize
+        cur_offset, cur_size, cur_size_compressed, cur_compression_type = INDEX_BLOCK_STRUCT.unpack(cur_idx_block)
 
-		with open(curDataPath, 'rb') as dataFile:
-			outDATAFile.write(dataFile.read())
-			
-		curOutOffset += curSize
+        if cur_size != 0:
+            cur_data_path = os.path.join(data_dir, str(cur_idx) + DATA_EXTENSION)
+            new_size = os.path.getsize(cur_data_path)
+            if cur_size != new_size:
+                print(f"index {cur_idx} new size: {hex(new_size)}")
+                cur_size = new_size
 
-	outIndexFile.write(struct.pack('<QQQQ', curOutOffset, curSize, curSize, 0))
-	curIdx += 1
+            with open(cur_data_path, 'rb') as dataFile:
+                out_data_file.write(dataFile.read())
 
-indexFile.close()
-outIndexFile.close()
-outDATAFile.close()
+        out_index_file.write(struct.pack('<QQQQ', cur_out_offset, cur_size, cur_size, 0))
+        cur_out_offset += cur_size
+        cur_idx += 1
+
+    source_index_file.close()
+    out_index_file.close()
+    out_data_file.close()

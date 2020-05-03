@@ -82,3 +82,9 @@ def decompress_kt_gz(in_stream: BinaryIO, out_stream: BinaryIO):
 def compress_kt_gz_file(in_path, out_path, level=-1):
     with open(in_path, 'rb') as in_file, open(out_path, 'wb') as out_file:
         compress_kt_gz(in_file, out_file, os.path.getsize(in_path), level)
+
+
+
+def decompress_kt_gz_file(in_path, out_path):
+    with open(in_path, 'rb') as in_file, open(out_path, 'wb') as out_file:
+        decompress_kt_gz(in_file, out_file)
